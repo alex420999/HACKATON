@@ -1,0 +1,177 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+      <meta charset="utf-8" />
+      <title>Simple HTML</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <script src="https://unpkg.com/tone"></script>
+      <script>
+		let isPlaying = false;
+      async function music() {
+		if (isPlaying) return; // Evita di avviare più volte
+		isPlaying = true;
+
+		await Tone.start();
+            console.log("Tone.js Audio Context Started");
+
+		
+		// Effect1	
+        const phaser = new Tone.Phaser({
+		frequency: 15,
+        octaves: 5,
+        baseFrequency: 1000
+		}).toDestination();
+		    
+		// Synth1
+        const synth = new Tone.PolySynth({
+		   envelope: {
+			attack: 0.1
+		   }
+		}).connect(phaser);
+
+        // Loop1 del synth 1
+		const loop = new Tone.Loop((time) => {
+               synth.triggerAttackRelease(notes[index], "16n", time); // Suona la nota
+               index = (index + 1) % notes.length; // Passa alla nota successiva
+            }, "16n").start(0);
+
+		const notes = [
+        ["G2", "G4", "Bb4"],
+        [],
+        ["G2", "G4", "Bb4"],
+        [],
+        ["F2", "F4", "A4"],
+        [],
+        ["F2", "F4", "A4"],
+        [],
+        ["Eb1", "D3", "G4"],
+        [],
+        [],
+        ["Eb1", "D3", "G4"],
+        [],
+        [],
+        ["Eb1", "D3", "G4"],
+        [],
+
+        ["Eb1", "G4", "Bb4"],
+        [],
+        ["Eb1", "G4", "Bb4"],
+        [],
+        ["F2", "F4", "A4"],
+        [],
+        ["F2", "F4", "A4"],
+        [],
+        ["C1", "D3", "G4"],
+        [],
+        [],
+        ["C1", "D3", "G4"],
+        [],
+        [],
+        ["C1", "D3", "G4"],
+        [],
+        
+        ["C1", "G4", "Bb4"],
+        [],
+        ["C1", "G4", "Bb4"],
+        [],
+        ["D1", "F4", "A4"],
+        [],
+        ["D1", "F4", "A4"],
+        [],
+        ["Eb1", "D3", "G4"],
+        [],
+        [],
+        ["Eb1", "D3", "G4"],
+        [],
+        [],
+        ["Eb1", "D3", "G4"],
+        [],
+
+        ["Eb1", "G4", "Bb4"],
+        [],
+        ["Eb1", "G4", "Bb4"],
+        [],
+        ["F2", "F4", "A4"],
+        [],
+        ["F2", "F4", "A4"],
+        [],
+        ["G2", "D3", "G4"],
+        [],
+        [],
+        ["G2", "D3", "G4"],
+        [],
+        [],
+        ["G2", "D3", "G4"],
+        [],
+
+
+        ];
+
+		let index = 0;
+
+
+        // Synth e destinazione audio
+        const arp = new Tone.FMSynth().toDestination();
+        arp.volume.value = -10;
+
+       // Note per il loop
+       const notes2 = ["C5", "D5", "F5", "C5", "D5", "F5", "C5", "D5", "G5", "C5", "D5", "F5",
+                       "C5", "D5", "F5", "C5", "D5", "F5", "C5", "D5", "G5", "C5", "D5", "G5",
+                       "C5", "D5", "F5", "C5", "D5", "F5", "C5", "D5", "F5", "C5", "D5", "F5",
+                       "C5", "D5", "F5", "C5", "D5", "G5", "C5", "D5", "F5", "C5", "D5", "F5",];
+       let index2 = 0;
+       
+       // Loop per il synth
+       const Loop3 = new Tone.Loop((time) => {
+           arp.triggerAttackRelease(notes2[index2], "16n", time); // Suona la nota
+           index2 = (index2 + 1) % notes2.length; // Passa alla nota successiva
+       }, "16n").start(0);
+
+		// Sample1	
+		const kick = new Tone.Sampler({
+           urls: {
+               C4: "kick.wav", // Nota e file audio associato
+           },
+        }).toDestination();
+
+		const clap = new Tone.Sampler({
+           urls: {
+               C4: "clap.wav", // Nota e file audio associato
+           },
+        }).toDestination();
+        
+        // Loop2
+		let cycleCount = 0;
+
+		const loop2 = new Tone.Loop((time) => {
+			   kick.triggerAttackRelease("C4", "8n", time);
+        
+		cycleCount++;
+		    if (cycleCount % 2 === 0) {
+               clap.triggerAttackRelease("C4", "8n", time); 
+            }
+		}, "4n").start(0);
+
+
+		// Start => Tone
+        Tone.Transport.bpm.value = 126;
+		Tone.Transport.start();	
+			
+        }
+
+	 function stopMusic() {
+		Tone.Transport.stop();
+        Tone.Transport.cancel();
+		console.log("Music stopped");
+		isPlaying = false;
+	 }
+
+      </script>
+   </head>
+   <body>
+      <h1>Song</h1>
+      <button onclick="music()">Click me to play!</button>
+	  <button onclick="stopMusic()">Stop</button>
+   </body>
+</html>
+
